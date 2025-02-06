@@ -139,7 +139,7 @@ class ActiveRecord
         return array_shift($resultado);
     }
 
-    // busca por token
+    // buscar por columna/valor
     public static function where($columna, $valor)
     {
         $query = "SELECT * FROM " . static::$tabla  . " WHERE $columna = '$valor'";

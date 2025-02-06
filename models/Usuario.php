@@ -55,7 +55,8 @@ class Usuario extends ActiveRecord
         return self::$alertas;
     }
 
-    public function validarLogin() {
+    public function validarLogin()
+    {
         if (!$this->email) {
             self::$alertas['error'][] = 'El Email es Obligatorio';
         }
@@ -65,29 +66,50 @@ class Usuario extends ActiveRecord
         return self::$alertas;
     }
 
+    public function validarEmail()
+    {
+        if (!$this->email) {
+            self::$alertas['error'][] = 'El Email es Obligatorio';
+        }
+        return self::$alertas;
+    }
+    public function validarPassword()
+    {
+        if (!$this->password) {
+            self::$alertas['error'][] = 'El Password es Obligatorio';
+        }
+        if (strlen($this->password) < 6) {
+            self::$alertas['error'][] = 'El Password debe tener al menos 6 caracteres';
+        }
+        return self::$alertas;
+    }
+
     public function existeUsuario()
     {
         $query = "SELECT * FROM " . self::$tabla . " WHERE email = '" . $this->email . "' LIMIT 1";
-        
+
         $resultado = self::$db->query($query);
-        
-        if($resultado->num_rows) {
+
+        if ($resultado->num_rows) {
             self::$alertas['error'][] = 'El Usuario ya esta registrado';
         }
         return $resultado;
     }
 
-    public function hashPassword() {
+    public function hashPassword()
+    {
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
     }
-    public function crearToken() {
+    public function crearToken()
+    {
         $this->token = uniqid();
     }
-    public function comprobarPasswordAndVerificado($password){
-        
-        $resultado = password_verify($password,$this->password);
+    public function comprobarPasswordAndVerificado($password)
+    {
 
-        if(!$resultado || !$this->confirmado) {
+        $resultado = password_verify($password, $this->password);
+
+        if (!$resultado || !$this->confirmado) {
             self::$alertas['error'][] = 'Password Incorrecto o tu cuenta no ha sido confirmada';
         } else {
             return true;
