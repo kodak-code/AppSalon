@@ -16,7 +16,7 @@ class APIController
     public static function guardar()
     {
         // Almacena la Cita y devuelve el ID
-        $cita = new Cita($_POST);        
+        $cita = new Cita($_POST);
         $resultado = $cita->guardar();
 
         $id = $resultado['id'];
@@ -36,5 +36,16 @@ class APIController
         // Retornamos una respuesta
 
         echo json_encode(['resultado' => $resultado]);
+    }
+
+    public static function eliminar()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $cita = Cita::find($_POST['id']);
+            $cita->eliminar();
+            header('Location:' . $_SERVER['HTTP_REFERER']); // redirecciona a la misma pagina en donde estabamos
+        }
     }
 }
